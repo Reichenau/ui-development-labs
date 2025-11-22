@@ -4,6 +4,16 @@
         - ячейка_робота: has_robot
         - тип_ячейки: cell_type
      методы: []
+     
+   - ЛабиринтРоботЭколог: RobotEcologistMaze
+     свойства:
+        - ширина: width
+        - длина: height
+        - ячейки: cells
+     методы:
+        - ИнициализироватьЛабиринт: initialize_maze
+        - ПолучитьСоседнююЯчейку: get_neighbor_cell
+        - ПолучитьИтератор: get_iterator
 
 перечисления:
    - ТипЯчеекЭколог: EcologistCellType
