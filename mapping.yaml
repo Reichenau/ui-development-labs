@@ -1,0 +1,35 @@
+классы:
+   - ЯчейкаРоботЭколог: RobotEcologistCell
+     свойства:
+        - ячейка_робота: has_robot
+        - тип_ячейки: cell_type
+     методы: []
+
+перечисления:
+   - ТипЯчеекЭколог: EcologistCellType
+     опции:
+        - Почва: SOIL
+        - Растение: PLANT
+        - Проба: SAMPLE
+        - Обработано: PROCESSED
+        - Загрязнение: POLLUTION
+        - Финиш: FINISH
+        - Контроль: CONTROL
+
+   - ТипНаправленийЭкологНапр: EcologistDirectionType
+     опции:
+        - ЭкологВперед: FORWARD
+        - ЭкологНазад: BACKWARD
+        - ЭкологВлево: LEFT
+        - ЭкологВправо: RIGHT
+        - ДиагЭкологВ: DIAG_UP
+        - ДиагЭкологН: DIAG_DOWN
+
+   - БазовыеТипыНаправления: BasicDirectionType
+     опции:
+        - С: NORTH
+        - Ю: SOUTH
+        - З: WEST
+        - В: EAST
+        - СЗ: NORTH_WEST
+        - ЮВ: SOUTH_EAST
