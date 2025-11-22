@@ -63,6 +63,58 @@ class RobotEcologistMaze:
             self.cells.append(row)
         print(f"Лабиринт {self.width}x{self.height} инициализирован типом {cell_type.value}")
 
+    def get_neighbor_cell(self, current_cell: RobotEcologistCell,
+                          direction: EcologistDirectionType):
+        """
+        Возвращает соседнюю ячейку по направлению или None,
+        если выход за границы
+        Соответствует: ПолучитьСоседнююЯчейку
+        """
+        # Находим координаты текущей ячейки (x, y)
+        current_x, current_y = -1, -1
+        found = False
+
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.cells[y][x] is current_cell:
+                    current_x = x
+                    current_y = y
+                    found = True
+                    break
+            if found:
+                break
+
+        if not found:
+            return None
+
+        # Определяем смещение (dx, dy) согласно
+        dx, dy = 0, 0
+
+        if direction == EcologistDirectionType.FORWARD:
+            dy = 1
+        elif direction == EcologistDirectionType.BACKWARD:
+            dy = -1
+        elif direction == EcologistDirectionType.RIGHT:
+            dx = 1
+        elif direction == EcologistDirectionType.LEFT:
+            dx = -1
+        elif direction == EcologistDirectionType.DIAG_UP:
+            dx = -1
+            dy = 1
+        elif direction == EcologistDirectionType.DIAG_DOWN:
+            dx = 1
+            dy = -1
+
+        # Вычисляем новые координаты
+        new_x = current_x + dx
+        new_y = current_y + dy
+
+        # Проверяем границы лабиринта
+        if 0 <= new_x < self.width and 0 <= new_y < self.height:
+            return self.cells[new_y][new_x]
+        else:
+            return None
+
 
 if __name__ == '__main__':
     print("Запуск main.py")
