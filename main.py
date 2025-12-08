@@ -94,6 +94,9 @@ class RobotEcologistMaze:
             return self.cells[new_y][new_x]
         else:
             return None
+        
+    def get_iterator(self, robot):
+        return SnakeIterator(robot)
 
 
 class RobotEcologist:
@@ -165,6 +168,39 @@ class RobotEcologist:
             print(f"Ячейка обработана: Проба -> Обработано")
         else:
             print("Здесь нет пробы для анализа")
+
+
+
+
+class SnakeIterator:
+    def __init__(self, robot: RobotEcologist):
+        self.robot = robot
+        self.going_right = True  
+
+    def next_step(self):
+        """
+        Выполняет один шаг алгоритма.
+        Возвращает True, если ход был сделан.
+        Возвращает False, если обход завершен.
+        """
+        
+        moved = None
+        if self.going_right:
+            moved = self.robot.move_right()
+        else:
+            moved = self.robot.move_left()
+
+        if moved:
+            return True
+
+        moved_up = self.robot.move_forward() 
+
+        if moved_up:
+            self.going_right = not self.going_right
+            return True
+        
+        return False
+
 
 if __name__ == '__main__':
     print("Запуск main.py")

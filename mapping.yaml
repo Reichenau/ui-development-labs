@@ -26,6 +26,10 @@
         - Спуститься: move_down_diag
         - Растение: process_plant
         - Проба: process_sample
+   - Итератор: SnakeIterator
+     свойства: []
+     методы:
+        - СледующийШаг: next_step
 перечисления:
    - ТипЯчеекЭколог: EcologistCellType
      опции:
