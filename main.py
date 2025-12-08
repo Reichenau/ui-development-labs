@@ -203,4 +203,35 @@ class SnakeIterator:
 
 
 if __name__ == '__main__':
-    print("Запуск main.py")
+    # 1. Создаем лабиринт 5x5
+    maze = RobotEcologistMaze(5, 5, [])
+    maze.initialize_maze(EcologistCellType.SOIL)
+
+    # 2. Добавляем препятствия и цели (для теста)
+    maze.cells[0][2].cell_type = EcologistCellType.POLLUTION
+    
+    maze.cells[1][1].cell_type = EcologistCellType.PLANT
+    maze.cells[2][3].cell_type = EcologistCellType.PLANT
+    
+    maze.cells[4][0].cell_type = EcologistCellType.FINISH
+
+    print("\n--- Старт симуляции ---")
+    
+    robot = RobotEcologist(maze)
+    robot.set_start_position(0, 0)
+
+    iterator = maze.get_iterator(robot)
+
+    robot.process_plant()
+    robot.process_sample()
+
+    running = True
+    while running:
+        running = iterator.next_step()
+        
+        robot.process_plant()
+        robot.process_sample()
+        
+        if robot.current_cell.cell_type == EcologistCellType.FINISH:
+            print("Финиш достигнут")
+            break
