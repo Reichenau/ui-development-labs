@@ -144,6 +144,27 @@ class RobotEcologist:
     def move_down_diag(self):
         return self._move(EcologistDirectionType.DIAG_DOWN)
 
+    def process_plant(self):
+        """
+        Метод: Растение()
+        Действие: Заменяет Растение -> Проба
+        """
+        if self.current_cell and self.current_cell.cell_type == EcologistCellType.PLANT:
+            self.current_cell.cell_type = EcologistCellType.SAMPLE
+            print(f"Ячейка обработана: Растение -> Проба")
+        else:
+            print("Здесь нет растения для обработки")
+
+    def process_sample(self):
+        """
+        Метод: Проба()
+        Действие: Заменяет Проба -> Обработано
+        """
+        if self.current_cell and self.current_cell.cell_type == EcologistCellType.SAMPLE:
+            self.current_cell.cell_type = EcologistCellType.PROCESSED
+            print(f"Ячейка обработана: Проба -> Обработано")
+        else:
+            print("Здесь нет пробы для анализа")
 
 if __name__ == '__main__':
     print("Запуск main.py")
