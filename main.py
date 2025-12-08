@@ -1,7 +1,5 @@
 from enum import Enum
 
-
-# Enums
 class EcologistCellType(Enum):
     SOIL = "Почва"
     PLANT = "Растение"
@@ -30,7 +28,6 @@ class BasicDirectionType(Enum):
     SOUTH_EAST = "ЮВ"
 
 
-# Основные классы
 class RobotEcologistCell:
     def __init__(self, has_robot: bool, cell_type: EcologistCellType):
         self.has_robot = has_robot
@@ -41,19 +38,12 @@ class RobotEcologistCell:
 
 
 class RobotEcologistMaze:
-    # ЛабиринтРоботЭколог
     def __init__(self, width: int, height: int, cells: list):
-        """
-        :param width: ширина
-        :param height: длина
-        :param cells: ячейки
-        """
         self.width = width
         self.height = height
         self.cells = cells
 
     def initialize_maze(self, cell_type: EcologistCellType):
-        # Создаем двумерный массив
         self.cells = []
         for y in range(self.height):
             row = []
@@ -63,17 +53,10 @@ class RobotEcologistMaze:
             self.cells.append(row)
         print(f"Лабиринт {self.width}x{self.height} инициализирован типом {cell_type.value}")
 
-    def get_neighbor_cell(self, current_cell: RobotEcologistCell,
-                          direction: EcologistDirectionType):
-        """
-        Возвращает соседнюю ячейку по направлению или None,
-        если выход за границы
-        Соответствует: ПолучитьСоседнююЯчейку
-        """
-        # Находим координаты текущей ячейки (x, y)
+    def get_neighbor_cell(self, current_cell: RobotEcologistCell, direction: EcologistDirectionType):
         current_x, current_y = -1, -1
         found = False
-
+        
         for y in range(self.height):
             for x in range(self.width):
                 if self.cells[y][x] is current_cell:
@@ -83,13 +66,12 @@ class RobotEcologistMaze:
                     break
             if found:
                 break
-
+        
         if not found:
             return None
 
-        # Определяем смещение (dx, dy) согласно
         dx, dy = 0, 0
-
+        
         if direction == EcologistDirectionType.FORWARD:
             dy = 1
         elif direction == EcologistDirectionType.BACKWARD:
@@ -105,15 +87,62 @@ class RobotEcologistMaze:
             dx = 1
             dy = -1
 
-        # Вычисляем новые координаты
         new_x = current_x + dx
         new_y = current_y + dy
 
-        # Проверяем границы лабиринта
         if 0 <= new_x < self.width and 0 <= new_y < self.height:
             return self.cells[new_y][new_x]
         else:
             return None
+
+
+class RobotEcologist:
+    def __init__(self, maze: RobotEcologistMaze):
+        self.maze = maze
+        self.current_cell = None  
+
+    def set_start_position(self, x: int, y: int):
+        if 0 <= y < self.maze.height and 0 <= x < self.maze.width:
+            target = self.maze.cells[y][x]
+            if target.cell_type in [EcologistCellType.POLLUTION, EcologistCellType.CONTROL]:
+                print("Ошибка: Нельзя стартовать с запрещенной ячейки")
+                return
+            
+            self.current_cell = target
+            self.current_cell.has_robot = True
+            print(f"Робот установлен в позицию {x}, {y}")
+        else:
+            print("Ошибка: Координаты вне лабиринта")
+
+    def _move(self, direction: EcologistDirectionType):
+        if not self.current_cell:
+            return None
+        
+        neighbor = self.maze.get_neighbor_cell(self.current_cell, direction)
+
+        if neighbor:
+            if neighbor.cell_type in [EcologistCellType.POLLUTION, EcologistCellType.CONTROL]:
+                return None
+            
+            self.current_cell.has_robot = False  
+            self.current_cell = neighbor
+            self.current_cell.has_robot = True   
+            return self.current_cell
+        
+        return None
+    
+    def move_forward(self):
+        return self._move(EcologistDirectionType.FORWARD)
+    def move_backward(self):
+        return self._move(EcologistDirectionType.BACKWARD)
+    def move_left(self):
+        return self._move(EcologistDirectionType.LEFT)
+    def move_right(self):
+        return self._move(EcologistDirectionType.RIGHT)
+    def move_up_diag(self):
+        return self._move(EcologistDirectionType.DIAG_UP)
+    def move_down_diag(self):
+        return self._move(EcologistDirectionType.DIAG_DOWN)
 
 
 if __name__ == '__main__':

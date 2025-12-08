@@ -14,7 +14,18 @@
         - ИнициализироватьЛабиринт: initialize_maze
         - ПолучитьСоседнююЯчейку: get_neighbor_cell
         - ПолучитьИтератор: get_iterator
-
+   - РоботЭколог: RobotEcologist
+     свойства:
+        - лабиринт: maze
+     методы:
+        - ИдтиЭкологВп: move_forward
+        - ОтойтиЭколог: move_backward
+        - СместитьсяВлево: move_left
+        - СместитьсяВправо: move_right
+        - Подняться: move_up_diag
+        - Спуститься: move_down_diag
+        - Растение: process_plant
+        - Проба: process_sample
 перечисления:
    - ТипЯчеекЭколог: EcologistCellType
      опции:
