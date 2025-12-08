@@ -29,12 +29,12 @@ class BasicDirectionType(Enum):
 
 
 class RobotEcologistCell:
-    def __init__(self, has_robot: bool, cell_type: EcologistCellType):
+    def __init__(self, has_robot: bool, cell_type: str):
         self.has_robot = has_robot
-        self.cell_type = cell_type
+        self.cell_type = cell_type 
 
     def __str__(self):
-        return f"[{self.cell_type.value}]"
+        return f"[{self.cell_type}]"
 
 
 class RobotEcologistMaze:
@@ -43,7 +43,7 @@ class RobotEcologistMaze:
         self.height = height
         self.cells = cells
 
-    def initialize_maze(self, cell_type: EcologistCellType):
+    def initialize_maze(self, cell_type: str):
         self.cells = []
         for y in range(self.height):
             row = []
@@ -51,9 +51,9 @@ class RobotEcologistMaze:
                 new_cell = RobotEcologistCell(False, cell_type)
                 row.append(new_cell)
             self.cells.append(row)
-        print(f"Лабиринт {self.width}x{self.height} инициализирован типом {cell_type.value}")
+        print(f"Лабиринт {self.width}x{self.height} инициализирован типом {cell_type}")
 
-    def get_neighbor_cell(self, current_cell: RobotEcologistCell, direction: EcologistDirectionType):
+    def get_neighbor_cell(self, current_cell: RobotEcologistCell, direction: str):
         current_x, current_y = -1, -1
         found = False
         
@@ -72,18 +72,18 @@ class RobotEcologistMaze:
 
         dx, dy = 0, 0
         
-        if direction == EcologistDirectionType.FORWARD:
+        if direction == EcologistDirectionType.FORWARD.value:
             dy = 1
-        elif direction == EcologistDirectionType.BACKWARD:
+        elif direction == EcologistDirectionType.BACKWARD.value:
             dy = -1
-        elif direction == EcologistDirectionType.RIGHT:
+        elif direction == EcologistDirectionType.RIGHT.value:
             dx = 1
-        elif direction == EcologistDirectionType.LEFT:
+        elif direction == EcologistDirectionType.LEFT.value:
             dx = -1
-        elif direction == EcologistDirectionType.DIAG_UP:
+        elif direction == EcologistDirectionType.DIAG_UP.value:
             dx = -1
             dy = 1
-        elif direction == EcologistDirectionType.DIAG_DOWN:
+        elif direction == EcologistDirectionType.DIAG_DOWN.value:
             dx = 1
             dy = -1
 
@@ -107,7 +107,8 @@ class RobotEcologist:
     def set_start_position(self, x: int, y: int):
         if 0 <= y < self.maze.height and 0 <= x < self.maze.width:
             target = self.maze.cells[y][x]
-            if target.cell_type in [EcologistCellType.POLLUTION, EcologistCellType.CONTROL]:
+            # Сравниваем строку с .value
+            if target.cell_type in [EcologistCellType.POLLUTION.value, EcologistCellType.CONTROL.value]:
                 print("Ошибка: Нельзя стартовать с запрещенной ячейки")
                 return
             
@@ -117,14 +118,14 @@ class RobotEcologist:
         else:
             print("Ошибка: Координаты вне лабиринта")
 
-    def _move(self, direction: EcologistDirectionType):
+    def _move(self, direction: str):
         if not self.current_cell:
             return None
         
         neighbor = self.maze.get_neighbor_cell(self.current_cell, direction)
 
         if neighbor:
-            if neighbor.cell_type in [EcologistCellType.POLLUTION, EcologistCellType.CONTROL]:
+            if neighbor.cell_type in [EcologistCellType.POLLUTION.value, EcologistCellType.CONTROL.value]:
                 return None
             
             self.current_cell.has_robot = False  
@@ -134,42 +135,37 @@ class RobotEcologist:
         
         return None
     
+    # В методы движения передаем .value (строку)
     def move_forward(self):
-        return self._move(EcologistDirectionType.FORWARD)
+        return self._move(EcologistDirectionType.FORWARD.value)
     def move_backward(self):
-        return self._move(EcologistDirectionType.BACKWARD)
+        return self._move(EcologistDirectionType.BACKWARD.value)
     def move_left(self):
-        return self._move(EcologistDirectionType.LEFT)
+        return self._move(EcologistDirectionType.LEFT.value)
     def move_right(self):
-        return self._move(EcologistDirectionType.RIGHT)
+        return self._move(EcologistDirectionType.RIGHT.value)
     def move_up_diag(self):
-        return self._move(EcologistDirectionType.DIAG_UP)
+        return self._move(EcologistDirectionType.DIAG_UP.value)
     def move_down_diag(self):
-        return self._move(EcologistDirectionType.DIAG_DOWN)
+        return self._move(EcologistDirectionType.DIAG_DOWN.value)
 
     def process_plant(self):
         """
-        Метод: Растение()
-        Действие: Заменяет Растение -> Проба
+        Заменяет Растение -> Проба
         """
-        if self.current_cell and self.current_cell.cell_type == EcologistCellType.PLANT:
-            self.current_cell.cell_type = EcologistCellType.SAMPLE
+        # Сравниваем строки
+        if self.current_cell and self.current_cell.cell_type == EcologistCellType.PLANT.value:
+            # Присваиваем строку
+            self.current_cell.cell_type = EcologistCellType.SAMPLE.value
             print(f"Ячейка обработана: Растение -> Проба")
-        else:
-            print("Здесь нет растения для обработки")
 
     def process_sample(self):
         """
-        Метод: Проба()
-        Действие: Заменяет Проба -> Обработано
+        Заменяет Проба -> Обработано
         """
-        if self.current_cell and self.current_cell.cell_type == EcologistCellType.SAMPLE:
-            self.current_cell.cell_type = EcologistCellType.PROCESSED
+        if self.current_cell and self.current_cell.cell_type == EcologistCellType.SAMPLE.value:
+            self.current_cell.cell_type = EcologistCellType.PROCESSED.value
             print(f"Ячейка обработана: Проба -> Обработано")
-        else:
-            print("Здесь нет пробы для анализа")
-
-
 
 
 class SnakeIterator:
@@ -178,12 +174,6 @@ class SnakeIterator:
         self.going_right = True  
 
     def next_step(self):
-        """
-        Выполняет один шаг алгоритма.
-        Возвращает True, если ход был сделан.
-        Возвращает False, если обход завершен.
-        """
-        
         moved = None
         if self.going_right:
             moved = self.robot.move_right()
@@ -203,19 +193,14 @@ class SnakeIterator:
 
 
 if __name__ == '__main__':
-    # 1. Создаем лабиринт 5x5
     maze = RobotEcologistMaze(5, 5, [])
-    maze.initialize_maze(EcologistCellType.SOIL)
+    maze.initialize_maze(EcologistCellType.SOIL.value)
 
-    # 2. Добавляем препятствия и цели (для теста)
-    maze.cells[0][2].cell_type = EcologistCellType.POLLUTION
-    
-    maze.cells[1][1].cell_type = EcologistCellType.PLANT
-    maze.cells[2][3].cell_type = EcologistCellType.PLANT
-    
-    maze.cells[4][0].cell_type = EcologistCellType.FINISH
+    maze.cells[0][2].cell_type = EcologistCellType.POLLUTION.value
+    maze.cells[1][1].cell_type = EcologistCellType.PLANT.value
+    maze.cells[2][3].cell_type = EcologistCellType.PLANT.value
+    maze.cells[4][0].cell_type = EcologistCellType.FINISH.value
 
-    print("\n--- Старт симуляции ---")
     
     robot = RobotEcologist(maze)
     robot.set_start_position(0, 0)
@@ -232,6 +217,6 @@ if __name__ == '__main__':
         robot.process_plant()
         robot.process_sample()
         
-        if robot.current_cell.cell_type == EcologistCellType.FINISH:
+        if robot.current_cell.cell_type == EcologistCellType.FINISH.value:
             print("Финиш достигнут")
             break
